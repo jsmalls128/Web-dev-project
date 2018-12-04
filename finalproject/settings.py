@@ -55,7 +55,7 @@ ROOT_URLCONF = 'finalproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/home/student/projects/finalproject/frisbee/templates/'],
+        'DIRS': [os.path.join(BASE_DIR,"frisbee/templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
