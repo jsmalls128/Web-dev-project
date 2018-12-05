@@ -13,6 +13,7 @@ def login(request):
     MyLoginForm = LoginForm(request.POST)
     if MyLoginForm.is_valid():
       username = MyLoginForm.cleaned_data['username']
+      password = MyLoginForm.cleaned_data['password']
       return redirect("http://172.19.50.140/finalproject/")
     else:
       return render(request,'loginerror.html')
