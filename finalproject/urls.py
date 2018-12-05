@@ -17,6 +17,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('finalproject/', include('frisbee.urls')),
-    path('finalproject/admin', admin.site.urls),
+    path('finalProject/', include('frisbee.urls')),
+    path('finalProject/admin', admin.site.urls),
 ]
