@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.hashers import *
 # Create your views here.
 from django.http import HttpResponse
 from frisbee.forms import LoginForm, RegisterForm
@@ -14,7 +15,6 @@ def login(request):
     MyLoginForm = LoginForm(request.POST)
     if MyLoginForm.is_valid():
       username = MyLoginForm.cleaned_data['username']
-      password = MyLoginForm.cleaned_data['password']
       return render(request,'test.html',{"test":username})
     else:
       return render(request,'loginerror.html')
@@ -30,12 +30,12 @@ def register(request):
       psw = MyRegisterForm.cleaned_data['psw']
       passwordRepeat = MyRegisterForm.cleaned_data['pswrepeat']
       if(psw != passwordRepeat):
-        test = 1
-        # Redirect to Error page  
-      formemail = MyRegisterForm.cleaned_data['email']
+        return render(request,'register_error.html')
+      form_email = MyRegisterForm.cleaned_data['email']
       firstname = MyRegisterForm.cleaned_data['firstName']
       lastname = MyRegisterForm.cleaned_data['lastName']
-      newUser = User(password = psw, email = formemail, first_name = firstname, last_name = lastname,
+      psw = make_password(psw)
+      newUser = User(password = psw, email = form_email, first_name = firstname, last_name = lastname,
        is_leader = False, receive_reminder = False
        )
       newUser.save()
