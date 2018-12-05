@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 # Create your views here.
 from django.http import HttpResponse
-from frisbee.forms import LoginForm
+from frisbee.forms import LoginForm, RegisterForm
+from frisbee.models import User, Event, Game, Team
 
 def index(request):
     return render(request,'home.html')
@@ -14,9 +15,32 @@ def login(request):
     if MyLoginForm.is_valid():
       username = MyLoginForm.cleaned_data['username']
       password = MyLoginForm.cleaned_data['password']
-      return redirect("http://172.19.50.140/finalproject/")
+      return render(request,'test.html',{"test":username})
     else:
       return render(request,'loginerror.html')
   else:
     MyLoginForm = LoginForm()
   return render(request,'login.html')
+  
+def register(request):
+  if request.method == "POST":
+    #Get the posted form
+    MyRegisterForm = RegisterForm(request.POST)
+    if MyRegisterForm.is_valid():
+      psw = MyRegisterForm.cleaned_data['psw']
+      passwordRepeat = MyRegisterForm.cleaned_data['pswrepeat']
+      if(psw != passwordRepeat):
+        test = 1
+        # Redirect to Error page  
+      formemail = MyRegisterForm.cleaned_data['email']
+      firstname = MyRegisterForm.cleaned_data['firstName']
+      lastname = MyRegisterForm.cleaned_data['lastName']
+      newUser = User(password = psw, email = formemail, first_name = firstname, last_name = lastname,
+       is_leader = False, receive_reminder = False
+       )
+      newUser.save()
+      return render(request,"test.html",{"test": newUser.email})
+    else:
+      return render(request,'loginerror.html')
+  else:
+    return render(request,'register.html')
