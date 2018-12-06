@@ -2,7 +2,7 @@ from django import forms
 from frisbee.models import User
 
 class LoginForm(forms.Form):
-   username = forms.CharField(max_length = 30)
+   username = forms.EmailField(max_length = 30)
    password = forms.CharField(widget = forms.PasswordInput())
    
    def clean_message(self):

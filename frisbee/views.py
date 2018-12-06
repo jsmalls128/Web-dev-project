@@ -25,12 +25,9 @@ def login(request):
         if(check_password(password,currentAccount.password)):
           request.session['username'] = username
           return redirect(index)
-      return render(request,'test.html',{"test":username})
-    else:
-      return render(request,'loginerror.html')
+    return render(request,'loginerror.html')
   else:
-    MyLoginForm = LoginForm()
-  return render(request,'login.html')
+    return render(request,'login.html')
 
 def logout(request):
    try:
@@ -61,3 +58,11 @@ def register(request):
       return render(request,'loginerror.html')
   else:
     return render(request,'register.html')
+    
+def profile(request):
+  if request.session.has_key('username'):
+    username = request.session['username']
+    currentAccount = User.objects.get(email = username)
+    return render(request,'profile.html',{"first_name":currentAccount.first_name,"last_name": currentAccount.last_name,"email":currentAccount.email })
+  return redirect(login)
+  
