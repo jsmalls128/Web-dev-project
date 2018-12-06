@@ -6,22 +6,39 @@ from frisbee.forms import LoginForm, RegisterForm
 from frisbee.models import User, Event, Game, Team
 
 def index(request):
-    return render(request,'home.html')
+  username = ""
+  logStatus = "Login"
+  if request.session.has_key('username'):
+    username = request.session['username']
+    logStatus = "Logout"
+  return render(request,'home.html',{"email":username,"login":logStatus})
 
 def login(request):
-  username = "not logged in"
   if request.method == "POST":
     #Get the posted form
     MyLoginForm = LoginForm(request.POST)
     if MyLoginForm.is_valid():
       username = MyLoginForm.cleaned_data['username']
+      password = MyLoginForm.cleaned_data['password']
+      if(0 < len(User.objects.filter(email = username))):
+        currentAccount = User.objects.get(email = username)
+        if(check_password(password,currentAccount.password)):
+          request.session['username'] = username
+          return redirect(index)
       return render(request,'test.html',{"test":username})
     else:
       return render(request,'loginerror.html')
   else:
     MyLoginForm = LoginForm()
   return render(request,'login.html')
-  
+
+def logout(request):
+   try:
+      del request.session['username']
+   except:
+      pass
+   return redirect(index)
+
 def register(request):
   if request.method == "POST":
     #Get the posted form

@@ -8,7 +8,6 @@ class LoginForm(forms.Form):
    def clean_message(self):
       username = self.cleaned_data.get("username")
       dbuser = User.objects.filter(email = username)
-      
       if not dbuser:
          raise forms.ValidationError("User does not exist in our db!")
       return username
