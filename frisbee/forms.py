@@ -25,3 +25,6 @@ class ProfileForm(forms.Form):
    email = forms.EmailField(max_length = 30)
    psw = forms.CharField(widget = forms.PasswordInput())
    pswrepeat = forms.CharField(widget = forms.PasswordInput())
+
+class TeamForm(forms.Form):
+   name = forms.CharField(max_length = 30)

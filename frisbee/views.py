@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import *
 # Create your views here.
 from django.http import HttpResponse
-from frisbee.forms import LoginForm, RegisterForm, ProfileForm
-from frisbee.models import User, Event, Game, Team
+from frisbee.forms import *
+from frisbee.models import *
 
 def index(request):
   username = ""
@@ -53,13 +53,16 @@ def register(request):
        is_leader = False, receive_reminder = False
        )
       newUser.save()
-      return render(request,"test.html",{"test": newUser.email})
+      return redirect(index)
     else:
       return render(request,'loginerror.html')
   else:
     return render(request,'register.html')
     
 def profile(request):
+  teamroster = []
+  team = ""
+  teamFunction = "Create"
   if request.session.has_key('username'):
     username = request.session['username']
     currentAccount = User.objects.get(email = username)
@@ -84,5 +87,26 @@ def profile(request):
             pass
           request.session['username'] = currentAccount.email
           currentAccount.save()
-    return render(request,'profile.html',{"first_name":currentAccount.first_name,"last_name": currentAccount.last_name,"email":currentAccount.email })
+    if currentAccount.team is not None:
+      team = currentAccount.team
+      if currentAccount.is_leader:
+        teamFunction = "Manage"
+        teamroster = User.objects.filter(team = team)
+    return render(request,'profile.html',{"first_name":currentAccount.first_name,"last_name": currentAccount.last_name,
+    "email":currentAccount.email,"team":team, "manage":teamFunction, "roster":teamroster})
   return redirect(login)
+
+def createTeam(request):
+  if request.method == "POST":
+    myTeamForm = TeamForm(request.POST)
+    if myTeamForm.is_valid():
+      teamName = myTeamForm.cleaned_data['name']
+      newTeam = Team(team_name = teamName, win_count = 0, loss_count = 0, tie_count = 0)
+      newTeam.save()
+      username = request.session['username']
+      currentAccount = User.objects.get(email = username)
+      currentAccount.team = newTeam
+      currentAccount.is_leader = True
+      currentAccount.save()
+      return redirect(profile)
+  return redirect(index)
