@@ -28,6 +28,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['172.19.50.159','172.19.50.140']
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ultimatefrisbee@gmail.com'
+EMAIL_HOST_PASSWORD = 'Frisbeeisthebestsport'
+EMAIL_PORT = 587
 
 # Application definition
 
