@@ -63,9 +63,14 @@ def profile(request):
   teamroster = []
   team = ""
   teamFunction = "Create"
+  events = None
   if request.session.has_key('username'):
     username = request.session['username']
     currentAccount = User.objects.get(email = username)
+    try:
+      events = Event.objects.filter(user = currentAccount)
+    except Event.DoesNotExist:
+      events = None
     if request.method == "POST":
     #Get the posted form
       MyProfileForm = ProfileForm(request.POST)
@@ -93,7 +98,7 @@ def profile(request):
         teamFunction = "Manage"
         teamroster = User.objects.filter(team = team)
     return render(request,'profile.html',{"first_name":currentAccount.first_name,"last_name": currentAccount.last_name,
-    "email":currentAccount.email,"team":team, "manage":teamFunction, "roster":teamroster})
+                                          "email":currentAccount.email,"team":team, "manage":teamFunction, "roster":teamroster, "events":events})
   return redirect(login)
 
 def createTeam(request):
@@ -108,5 +113,20 @@ def createTeam(request):
       currentAccount.team = newTeam
       currentAccount.is_leader = True
       currentAccount.save()
+      return redirect(profile)
+  return redirect(index)
+
+def createEvent(request):
+  if request.method == "POST":
+    MyEventForm = EventForm(request.POST)
+    if MyEventForm.is_valid():
+      eventName = MyEventForm.cleaned_data['name']
+      location = MyEventForm.cleaned_data['location']
+      date = MyEventForm.cleaned_data['date']
+      username = request.session['username']
+      currentAccount = User.objects.get(email = username)
+      newEvent = Event(eventName = eventName, location = location, date = date)
+      newEvent.user = currentAccount
+      newEvent.save()
       return redirect(profile)
   return redirect(index)

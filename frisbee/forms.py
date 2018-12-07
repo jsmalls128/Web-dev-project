@@ -28,3 +28,8 @@ class ProfileForm(forms.Form):
 
 class TeamForm(forms.Form):
    name = forms.CharField(max_length = 30)
+
+class EventForm(forms.Form):
+   name = forms.CharField(max_length = 100)
+   location = forms.CharField(max_length = 100)
+   date = forms.DateField()

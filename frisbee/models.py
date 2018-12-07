@@ -1,12 +1,8 @@
 from django.db import models
+import datetime
  # Create your models here.
 
-      
-class Event(models.Model):
-  location = models.CharField(max_length=100)
-  class Meta:
-    db_table = "EventTable"
-  
+
 class Game(models.Model):
   location = models.CharField(max_length=100)
   team1_score = models.IntegerField()
@@ -32,3 +28,11 @@ class User(models.Model):
   receive_reminder = models.BooleanField(default=False)
   class Meta:
     db_table = "UserTable"
+
+class Event(models.Model):
+  eventName = models.CharField(max_length=200, default="Placehold Name")
+  location = models.CharField(max_length=200)
+  date = models.DateField(default=datetime.date.today)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+  class Meta:
+    db_table = "EventTable"
