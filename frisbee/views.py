@@ -98,7 +98,7 @@ def profile(request):
         teamFunction = "Manage"
         teamroster = User.objects.filter(team = team)
     return render(request,'profile.html',{"first_name":currentAccount.first_name,"last_name": currentAccount.last_name,
-                                          "email":currentAccount.email,"team":team, "manage":teamFunction, "roster":teamroster, "events":events})
+                                          "email":currentAccount.email,"team":team, "manage":teamFunction, "roster":teamroster, "events":events, "login":"LogOut"})
   return redirect(login)
 
 def createTeam(request):
