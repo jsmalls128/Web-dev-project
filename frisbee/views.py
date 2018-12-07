@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import *
 # Create your views here.
 from django.http import HttpResponse
-from frisbee.forms import LoginForm, RegisterForm
+from frisbee.forms import LoginForm, RegisterForm, ProfileForm
 from frisbee.models import User, Event, Game, Team
 
 def index(request):
@@ -63,6 +63,26 @@ def profile(request):
   if request.session.has_key('username'):
     username = request.session['username']
     currentAccount = User.objects.get(email = username)
+    if request.method == "POST":
+    #Get the posted form
+      MyProfileForm = ProfileForm(request.POST)
+      if MyProfileForm.is_valid():
+        psw = MyProfileForm.cleaned_data['psw']
+        passwordRepeat = MyProfileForm.cleaned_data['pswrepeat']
+        if(psw != passwordRepeat):
+          return redirect(index)
+        form_email = MyProfileForm.cleaned_data['email']
+        firstname = MyProfileForm.cleaned_data['firstName']
+        lastname = MyProfileForm.cleaned_data['lastName']
+        if(check_password(psw,currentAccount.password)):
+          currentAccount.email = form_email
+          currentAccount.first_name = firstname
+          currentAccount.last_name = lastname
+          try:
+            del request.session['username']
+          except:
+            pass
+          request.session['username'] = currentAccount.email
+          currentAccount.save()
     return render(request,'profile.html',{"first_name":currentAccount.first_name,"last_name": currentAccount.last_name,"email":currentAccount.email })
   return redirect(login)
-  

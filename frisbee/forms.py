@@ -13,8 +13,15 @@ class LoginForm(forms.Form):
       return username
    
 class RegisterForm(forms.Form):
-  firstName = forms.CharField(max_length = 20)
-  lastName = forms.CharField(max_length = 20)
-  email = forms.EmailField(max_length = 30)
-  psw = forms.CharField(widget = forms.PasswordInput())
-  pswrepeat = forms.CharField(widget = forms.PasswordInput())
+   firstName = forms.CharField(max_length = 20)
+   lastName = forms.CharField(max_length = 20)
+   email = forms.EmailField(max_length = 30)
+   psw = forms.CharField(widget = forms.PasswordInput())
+   pswrepeat = forms.CharField(widget = forms.PasswordInput())
+
+class ProfileForm(forms.Form):
+   firstName = forms.CharField(max_length = 20)
+   lastName = forms.CharField(max_length = 20)
+   email = forms.EmailField(max_length = 30)
+   psw = forms.CharField(widget = forms.PasswordInput())
+   pswrepeat = forms.CharField(widget = forms.PasswordInput())
