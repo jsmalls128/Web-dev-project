@@ -88,12 +88,12 @@ span.psw {
     </label>
   </div>
   <div class="container" style="background-color:#f1f1f1">
-    <a href=".." style="text-decoration:none" class="cancelbtn">Cancel</a>
+    <a href="{% url 'home' %}" style="text-decoration:none" class="cancelbtn">Cancel</a>
     <span class="psw"><a href="#">Forgot password?</a></span>
   </div>
 <form>
   <div class="container" style="background-color:#f1f1f1">
-    Don't have an account? <a href="../register/" style="text-decoration:none" class="register">Register Here</a>
+    Don't have an account? <a href="{% url 'register' %}" style="text-decoration:none" class="register">Register Here</a>
   </div>
 </body>
 </html>
