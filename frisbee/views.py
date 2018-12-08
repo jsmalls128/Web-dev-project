@@ -92,8 +92,8 @@ def profile(request):
       if currentAccount.is_leader:
         teamFunction = "Manage"
         teamroster = User.objects.filter(team = team)
-    return render(request,'profile.html',{"first_name":currentAccount.first_name,"last_name": currentAccount.last_name,
-    "email":currentAccount.email,"team":team, "manage":teamFunction, "roster":teamroster})
+    return render(request,'profile.html',{"Account":currentAccount, "last_name": currentAccount,
+    "email":currentAccount,"team":team, "manage":teamFunction, "roster":teamroster})
   return redirect(login)
 
 def createTeam(request):
