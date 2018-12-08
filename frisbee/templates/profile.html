@@ -85,7 +85,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	    <li class="list-group-item text-muted">Hosting Events:</li>
           {% if events is not None %}
 	     {% for event in events %}
-	      <li class="list-group-item text-right"><span class="pull-left"><strong>{{event.eventName}}</strong></span></li>
+	      <li class="list-group-item text-right"><span class="pull-left"><strong><a href="/finalProject/event/{{event.id}}">{{event.eventName}}</a></strong></span></li>
 	     {% endfor %}
 	     {% endif %}
 	  </ul>

@@ -130,3 +130,27 @@ def createEvent(request):
       newEvent.save()
       return redirect(profile)
   return redirect(index)
+
+def viewEvent(request, eventid):
+  if request.session.has_key('username'):
+    username = request.session['username']
+    currentAccount = User.objects.get(email = username)
+    currentEvent = Event.objects.get(id = eventid)
+    eventName = currentEvent.eventName
+    date = currentEvent.date
+    location = currentEvent.date
+    if currentEvent.user == currentAccount:
+      if request.method == 'POST':
+        MyEventForm = EventForm(request.POST)
+        eventName_form = MyEventForm.cleaned_data['name']
+        location_form = MyEventForm.cleaned_data['location']
+        date_form = MyEventForm.cleaned_data['date']
+        currentEvent.eventName = eventName_form
+        currentEvent.location = location_form
+        currentEvent.date = date_form
+        currentEvent.save()
+        return redirect(viewEvent)
+      elif request.method == 'GET':
+        return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'LogOut'})
+    else:
+      return render(request, 'viewEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'LogOut'})
