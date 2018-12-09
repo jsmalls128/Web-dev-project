@@ -3,11 +3,8 @@ from django.contrib.auth.hashers import *
 from django.http import HttpResponse
 from frisbee.forms import *
 from frisbee.models import *
-<<<<<<< HEAD
-import datetime
-=======
 from django.core.mail import send_mail
->>>>>>> 6102288cdba879baa68c4dbbd267d17b440826c5
+import datetime
 
 def sendMail(request,recipient,hour):
   
@@ -166,15 +163,15 @@ def viewEvent(request, eventid):
           currentEvent.date = date_form
           currentEvent.save()
           request.method = 'GET'
-          return render(request, 'modifyEvent.html', {'date':date_form,'location':location_form,'eventName':eventName_form, 'login':'LogOut'})
+          return render(request, 'modifyEvent.html', {'date':date_form,'location':location_form,'eventName':eventName_form, 'login':'Logout'})
         else:
-          return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'LogOut'})
+          return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout'})
       elif request.method == 'GET':
-        return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'LogOut'})
+        return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout'})
     else:
-      return render(request, 'viewEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'LogOut'})
+      return render(request, 'viewEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout'})
 
 def onGoingEvents(request):
   if request.session.has_key('username'):
     events = Event.objects.all()
-    return render(request, 'onGoingEvents.html', {'events':events, 'login':'LogOut'})
+    return render(request, 'onGoingEvents.html', {'events':events, 'login':'Logout'})

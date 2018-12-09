@@ -11,7 +11,6 @@ urlpatterns = [
     path('profile/team', views.createTeam, name='createTeam'),
     path('profile/event', views.createEvent, name='createEvent'),
     path('event/<int:eventid>', views.viewEvent, name='viewEvent'),
-<<<<<<< HEAD
     path('on-going-events/', views.onGoingEvents, name='onGoingEvents'),
     path('mail/', views.sendMail, name='mail'),
 ]
