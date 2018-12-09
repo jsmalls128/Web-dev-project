@@ -10,4 +10,5 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/team', views.createTeam, name='createTeam'),
     path('profile/event', views.createEvent, name='createEvent'),
+    path('mail/', views.sendMail, name='mail'),
 ]
