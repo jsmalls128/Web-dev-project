@@ -21,7 +21,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
     <a href="{% url 'login' %}" id="Sign-in" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">{{login}}</a>
     <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Profile</a>
-    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">On-going Events</a>
+    <a href="{% url 'onGoingEvents' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">On-going Events</a>
   </div>
 
   <!-- Navbar on small screens -->
@@ -29,7 +29,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-padding-large">Home</a>
     <a href="{% url 'login' %}" class="w3-bar-item w3-button w3-padding-large">{{login}}</a>
     <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-padding-large">Profile</a>
-    <a href="#" class="w3-bar-item w3-button w3-padding-large">On-going Events</a>
+    <a href="{% url 'onGoingEvents' %}" class="w3-bar-item w3-button w3-padding-large">On-going Events</a>
   </div>
 </div>
 

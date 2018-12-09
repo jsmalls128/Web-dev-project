@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import *
 from django.http import HttpResponse
 from frisbee.forms import *
 from frisbee.models import *
+import datetime
 
 def index(request):
   username = ""
@@ -138,19 +139,28 @@ def viewEvent(request, eventid):
     currentEvent = Event.objects.get(id = eventid)
     eventName = currentEvent.eventName
     date = currentEvent.date
-    location = currentEvent.date
+    location = currentEvent.location
     if currentEvent.user == currentAccount:
       if request.method == 'POST':
         MyEventForm = EventForm(request.POST)
-        eventName_form = MyEventForm.cleaned_data['name']
-        location_form = MyEventForm.cleaned_data['location']
-        date_form = MyEventForm.cleaned_data['date']
-        currentEvent.eventName = eventName_form
-        currentEvent.location = location_form
-        currentEvent.date = date_form
-        currentEvent.save()
-        return redirect(viewEvent)
+        if MyEventForm.is_valid():
+          eventName_form = MyEventForm.cleaned_data['name']
+          location_form = MyEventForm.cleaned_data['location']
+          date_form = MyEventForm.cleaned_data['date']
+          currentEvent.eventName = eventName_form
+          currentEvent.location = location_form
+          currentEvent.date = date_form
+          currentEvent.save()
+          request.method = 'GET'
+          return render(request, 'modifyEvent.html', {'date':date_form,'location':location_form,'eventName':eventName_form, 'login':'LogOut'})
+        else:
+          return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'LogOut'})
       elif request.method == 'GET':
         return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'LogOut'})
     else:
       return render(request, 'viewEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'LogOut'})
+
+def onGoingEvents(request):
+  if request.session.has_key('username'):
+    events = Event.objects.all()
+    return render(request, 'onGoingEvents.html', {'events':events, 'login':'LogOut'})

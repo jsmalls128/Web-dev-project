@@ -11,4 +11,5 @@ urlpatterns = [
     path('profile/team', views.createTeam, name='createTeam'),
     path('profile/event', views.createEvent, name='createEvent'),
     path('event/<int:eventid>', views.viewEvent, name='viewEvent'),
+    path('on-going-events/', views.onGoingEvents, name='onGoingEvents'),
 ]
