@@ -1,11 +1,25 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import *
-# Create your views here.
 from django.http import HttpResponse
 from frisbee.forms import *
 from frisbee.models import *
+<<<<<<< HEAD
 import datetime
+=======
+from django.core.mail import send_mail
+>>>>>>> 6102288cdba879baa68c4dbbd267d17b440826c5
 
+def sendMail(request,recipient,hour):
+  
+  send_mail(
+    'Reminder, '+ hour +' hours til kickoff!',
+    'Your game starts in '+ hour +' hours!',
+    '', # Leave blank
+    ['test@gmail.com'], # List of recipients
+    fail_silently=False,
+)
+  return redirect(index)
+  
 def index(request):
   username = ""
   logStatus = "Login"
