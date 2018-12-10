@@ -151,6 +151,7 @@ def viewEvent(request, eventid):
     eventName = currentEvent.eventName
     date = currentEvent.date
     location = currentEvent.location
+    teams = currentEvent.teams.all()
     if currentEvent.user == currentAccount:
       if request.method == 'POST':
         MyEventForm = EventForm(request.POST)
@@ -163,11 +164,11 @@ def viewEvent(request, eventid):
           currentEvent.date = date_form
           currentEvent.save()
           request.method = 'GET'
-          return render(request, 'modifyEvent.html', {'date':date_form,'location':location_form,'eventName':eventName_form, 'login':'Logout'})
+          return render(request, 'modifyEvent.html', {'date':date_form,'location':location_form,'eventName':eventName_form, 'login':'Logout', 'teams':teams})
         else:
-          return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout'})
+          return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams})
       elif request.method == 'GET':
-        return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout'})
+        return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams})
     else:
       return render(request, 'viewEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout'})
 

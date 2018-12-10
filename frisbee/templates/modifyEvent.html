@@ -58,7 +58,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 <div class="w3-row-padding w3-padding-64 w3-container">
   <div class="w3-content">
     <h1 class="w3-center">Edit Your Event</h1>
-    <form class="form" action="" method="post" id="registrationForm"> {% csrf_token %}
+    <form class="form" action="" method="post" id="eventForm"> {% csrf_token %}
       <div class="form-group" id="event_creation">
         
         <div class="col-xs-6">
@@ -80,6 +80,32 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
           <label for="phone"><h4>Date</h4></label>
           <input type="date" class="form-control" name="date" id="phone" value="{{date|date:'Y-m-d'}}" title="enter a date.">
         </div>
+      </div>
+
+
+      <div class="form-group">
+	<div class="col-xs-6">
+	  <label style="visibility: hidden;"><h4>Placeholder<h4/></label>
+	  <input style="visibility: hidden;" class="form-control" type="text">
+	</div>
+      </div>
+      <div class="form-group">
+	<div class="col-xs-6">
+	  <label><h4>Teams</h4>
+	    {% if teams != Null %}
+	    <ul>
+	    {% for team in teams %}
+	    <li><label for="team-1">{{team.team_name}}</label>
+	      <select name="{{team.team_name}}" form="eventForm">
+		<option value="Keep Team">Keep Team</option>
+		<option value="Remove Team">Remove Team</option>
+	    </select></li>
+	    {% endfor %}
+	  </ul>
+	    {% else %}
+	    No Teams Have Signed Up
+	    {% endif %}
+	</div>
       </div>
       <div class="form-group">
         <div class="col-xs-12">
