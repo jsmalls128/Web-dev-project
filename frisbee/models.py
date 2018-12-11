@@ -21,7 +21,7 @@ class User(models.Model):
   last_name = models.CharField(max_length=30)
   is_leader = models.BooleanField(default=False)
   is_active = models.BooleanField(default=False)
-  team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
+  team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
   receive_reminder = models.BooleanField(default=False)
   last_login = models.DateTimeField(auto_now=False, auto_now_add=True)
   class Meta:

@@ -200,7 +200,7 @@ def viewEvent(request, eventid):
           eventName_form = MyEventForm.cleaned_data['name']
           location_form = MyEventForm.cleaned_data['location']
           date_form = MyEventForm.cleaned_data['date']
-          i = 0
+          i = 1
           for team in teams:
             form_name = 'team_' + str(i)
             action = request.POST[form_name]

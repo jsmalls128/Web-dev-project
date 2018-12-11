@@ -95,8 +95,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	    {% if teams != Null %}
 	    <ul>
 	    {% for team in teams %}
-	    <li><label for="team_{{ forloop.counter0 }}">Remove {{team.team_name}}?</label>
-	      <input type="checkbox" name="team_{{ forloop.counter0 }}" value="true">
+	    <li><label for="team_{{ forloop.counter }}">Remove {{team.team_name}}?</label>
+	      <input type="radio" name="team_{{ forloop.counter }}" value="true"> Yes 
+	      <input type="radio" name="team_{{ forloop.counter }}" value="false" checked> No
 	    </li>
 	    {% endfor %}
 	  </ul>
