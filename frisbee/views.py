@@ -5,7 +5,11 @@ from frisbee.forms import *
 from frisbee.models import *
 from django.core.mail import send_mail
 import datetime
-
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from .tokens import account_activation_token
 def sendMail(request,recipient,hour):
   
   send_mail(
@@ -16,7 +20,32 @@ def sendMail(request,recipient,hour):
     fail_silently=False,
 )
   return redirect(index)
-  
+
+def confirm(request,uid,token):
+  try:
+      uid = force_text(urlsafe_base64_decode(uid))
+      user = User.objects.get(pk=uid)
+  except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+      user = None
+  if user is not None and default_token_generator.check_token(user, token):
+      user.is_active = True
+      user.save()
+      # return redirect('home')
+      return render(request,'home.html',{"email":"Activation Success!","login":"Login"})
+  else:
+      return HttpResponse('Activation link is invalid!' + user.first_name)
+
+def sendConf(request,uid,token,email):
+  uid = uid.decode("ASCII") 
+  send_mail(
+    'Registration confirmation',
+    'Please go here to confirm your account\n http://172.19.50.140/finalProject/' + uid + '/' + token,
+    '', # Leave blank
+    [email], # List of recipients
+    fail_silently=False,
+)
+  return render(request,'home.html',{"email":"Please check your email!","login":"Login"})
+
 def index(request):
   username = ""
   logStatus = "Login"
@@ -34,9 +63,10 @@ def login(request):
       password = MyLoginForm.cleaned_data['password']
       if(0 < len(User.objects.filter(email = username))):
         currentAccount = User.objects.get(email = username)
-        if(check_password(password,currentAccount.password)):
-          request.session['username'] = username
-          return redirect(index)
+        if(currentAccount.is_active):
+          if(check_password(password,currentAccount.password)):
+            request.session['username'] = username
+            return redirect(index)
     return render(request,'loginerror.html')
   else:
     return render(request,'login.html')
@@ -60,12 +90,18 @@ def register(request):
       form_email = MyRegisterForm.cleaned_data['email']
       firstname = MyRegisterForm.cleaned_data['firstName']
       lastname = MyRegisterForm.cleaned_data['lastName']
+      #new_user = User.objects.create_user(username=email, email=email, password=psw)
+      #new_user.save()
+      #token = default_token_generator.make_token(new_user)
+      #uid = urlsafe_base64_encode(force_bytes(new_user.pk))
       psw = make_password(psw)
       newUser = User(password = psw, email = form_email, first_name = firstname, last_name = lastname,
        is_leader = False, receive_reminder = False
        )
       newUser.save()
-      return redirect(index)
+      token = default_token_generator.make_token(newUser)
+      uid = urlsafe_base64_encode(force_bytes(newUser.pk))
+      return sendConf(request,uid,token,form_email)
     else:
       return render(request,'loginerror.html')
   else:
