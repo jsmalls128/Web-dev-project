@@ -129,19 +129,24 @@ def createTeam(request):
   return redirect(index)
 
 def createEvent(request):
-  if request.method == "POST":
-    MyEventForm = EventForm(request.POST)
-    if MyEventForm.is_valid():
-      eventName = MyEventForm.cleaned_data['name']
-      location = MyEventForm.cleaned_data['location']
-      date = MyEventForm.cleaned_data['date']
-      username = request.session['username']
-      currentAccount = User.objects.get(email = username)
-      newEvent = Event(eventName = eventName, location = location, date = date)
-      newEvent.user = currentAccount
-      newEvent.save()
+  if request.session.has_key('username'):
+    if request.method == "POST":
+      MyEventForm = EventForm(request.POST)
+      if MyEventForm.is_valid():
+        eventName = MyEventForm.cleaned_data['name']
+        location = MyEventForm.cleaned_data['location']
+        date = MyEventForm.cleaned_data['date']
+        username = request.session['username']
+        currentAccount = User.objects.get(email = username)
+        newEvent = Event(eventName = eventName, location = location, date = date)
+        newEvent.user = currentAccount
+        newEvent.save()
+        return redirect(profile)
       return redirect(profile)
-  return redirect(index)
+    else:
+      return redirect(profile)
+  else:
+    return redirect(login)
 
 def viewEvent(request, eventid):
   if request.session.has_key('username'):
@@ -170,9 +175,30 @@ def viewEvent(request, eventid):
       elif request.method == 'GET':
         return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams})
     else:
-      return render(request, 'viewEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout'})
+      return render(request, 'viewEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams, 'is_full':currentEvent.is_full, 'is_leader':currentAccount.is_leader, 'eventid':eventid})
+  else:
+    redirect(login)
 
 def onGoingEvents(request):
   if request.session.has_key('username'):
     events = Event.objects.all()
     return render(request, 'onGoingEvents.html', {'events':events, 'login':'Logout'})
+  else:
+    redirect(login)
+
+def joinEvent(request, eventid):
+  if request.session.has_key('username'):
+    currentAccount = User.objects.get(email = request.session['username'])
+    currentAccount.save()
+    currentEvent = Event.objects.get(id = eventid)
+    currentEvent.save()
+    currentEvent.teams.add(currentAccount.team)
+    teams = currentEvent.teams.all()
+    if teams.count == 8:
+      currentEvent.is_full = True
+      currentEvent.save()
+    else:
+      currentEvent.save()
+    return redirect(viewEvent, eventid)
+  else:
+    return redirect(login)

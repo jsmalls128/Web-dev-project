@@ -54,7 +54,35 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 </header>
 
 <h1 class="w3-center">{{eventName}}</h1>
-
+<div class="w3-row-padding w3-padding-64 w3-container">
+     <div class="w3-content">
+       <h3>Where?</h3> 
+       <ul>
+	 <li>{{location}}</li>
+       </ul>
+       <h3>When?</h3> 
+       <ul>
+	 <li>{{date}}</li>
+       </ul>
+       <div>
+	 <h3>Team List</h3>
+	 {% if teams != Null %}
+	 <ul>
+	   {% for team in teams %}
+	   <li>{{team.team_name}}</li>
+	   {% endfor %}
+	 </ul>
+	 {% endif %}
+	 {% if is_full != True %}
+	 {% if is_leader == True %}
+	 <form class="form" action="{% url 'joinEvent' eventid %}" method="post" id="joinEvent"> {% csrf_token %}
+	 <button type="submit">Join Event</button>
+	 </form>
+	 {% endif %}
+	 {% endif %}
+       </div>
+     </div>
+</div>
 <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
     <h1 class="w3-margin w3-xlarge">Quote of the day: live life</h1>
 </div>
