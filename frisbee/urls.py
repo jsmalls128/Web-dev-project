@@ -12,5 +12,7 @@ urlpatterns = [
     path('profile/event', views.createEvent, name='createEvent'),
     path('event/<int:eventid>', views.viewEvent, name='viewEvent'),
     path('on-going-events/', views.onGoingEvents, name='onGoingEvents'),
+    path('teams/', views.teams, name='teams'),
+    path('teams/<int:teamid>', views.viewTeam, name='viewTeam'),
     path('mail/', views.sendMail, name='mail'),
 ]

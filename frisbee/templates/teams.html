@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
+.w3-bar,h1,button {font-family: "Montserrat", sans-serif}
+.fa-anchor,.fa-coffee {font-size:200px}
+</style>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<title>Frisbee Profile</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body onload="checkCookie(); checkTeam();">
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-red w3-card w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Home</a>
+    <a href="{% url 'login' %}" id="Sign-in" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">{{login}}</a>
+    <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Profile</a>
+    <a href="{% url 'teams' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Teams</a>
+    <a href="{% url 'onGoingEvents' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">On-going Events</a>
+  </div>
+
+  <!-- Navbar on small screens -->
+  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+    <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-padding-large">Home</a>
+    <a href="{% url 'login' %}" class="w3-bar-item w3-button w3-padding-large">{{login}}</a>
+    <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-padding-large">Profile</a>
+    <a href="{% url 'onGoingEvents' %" class="w3-bar-item w3-button w3-padding-large">On-going Events</a>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="w3-container w3-red w3-center" style="padding:128px 16px">
+  <h1 class="w3-margin w3-jumbo">Team Overview</h1>
+</header>
+
+
+<!-- Eventsa -->
+<center>
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    {% if teams %}
+    <table>
+      <tr>
+	<th>Team Name</th>
+	<th>Wins</th>
+	<th>Losses</th>
+	<th>Ties</th>
+      </tr>
+    {% for team in teams %}
+      <tr>
+	<td><a href="{% url 'viewTeam' team.id %}">{{team.team_name}}</a></td>
+	<td>{{team.win_count}}</td>
+	<td>{{team.loss_count}}</td>
+	<td>{{team.tie_count}}</td>
+      </tr>
+    {% endfor%}
+    </table>
+    {% else %}
+    <h2>No Teams Registered</h2>
+    {% endif %}
+  </div>
+</div>
+</center>
+<div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
+    <h1 class="w3-margin w3-xlarge">Quote of the day: live life</h1>
+</div>
+
+<script>
+  // Used to toggle the menu on small screens when clicking on the menu button
+  function myFunction() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+  x.className += " w3-show";
+  } else { 
+  x.className = x.className.replace(" w3-show", "");
+  }
+  }
+
+  function checkCookie() {
+  account = document.getElementById("Sign-in");
+  account = account.innerHTML
+  console.log(account)
+  var compare = 'Logout';
+  if(account === compare){
+  var signInEle = document.getElementById("Sign-in");
+  signInEle.href="{% url 'logout' %}";
+  }
+  }
+  
+  function checkTeam() {
+  account = document.getElementById("team-check");
+  account = account.innerHTML
+  console.log(account)
+  var compare = 'Manage Team';
+  if(account === compare){
+  var div = document.getElementById("team-name-input");
+  div.parentNode.removeChild(div);
+  }
+  }
+</script>
+
+</body>
+</html>

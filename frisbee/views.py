@@ -176,3 +176,21 @@ def onGoingEvents(request):
   if request.session.has_key('username'):
     events = Event.objects.all()
     return render(request, 'onGoingEvents.html', {'events':events, 'login':'Logout'})
+  return redirect(login)
+
+def teams(request):
+  if request.session.has_key('username'):
+    teams = Team.objects.all()
+    return render(request, 'teams.html', {'teams':teams, 'login':'Logout'})
+  return redirect(login)
+
+def viewTeam(request, teamid):
+  if request.session.has_key('username'):
+    users = User.objects.all()
+    currentTeam = Team.objects.get(id = teamid)
+    teamName = currentTeam.team_name
+    win_num = currentTeam.win_count
+    loss_num  = currentTeam.loss_count
+    tie_num = currentTeam.tie_count
+    return render(request, 'viewTeam.html', {'users':users, 'currentTeam':currentTeam, 'teamName':teamName, 'win_num':win_num, 'loss_num':loss_num, 'tie_num':tie_num,'login':'Logout'})
+  return redirect(login)
