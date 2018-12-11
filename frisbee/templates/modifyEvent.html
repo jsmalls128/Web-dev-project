@@ -95,15 +95,11 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
 	    {% if teams != Null %}
 	    <ul>
 	    {% for team in teams %}
-	    <li><label for="team-1">{{team.team_name}}</label>
-	      <select name="{{team.team_name}}" form="eventForm">
-		<option value="Keep Team">Keep Team</option>
-		<option value="Remove Team">Remove Team</option>
-	    </select></li>
+	    <li><label for="team_{{ forloop.counter0 }}">Remove {{team.team_name}}?</label>
+	      <input type="checkbox" name="team_{{ forloop.counter0 }}" value="true">
+	    </li>
 	    {% endfor %}
 	  </ul>
-	    {% else %}
-	    No Teams Have Signed Up
 	    {% endif %}
 	</div>
       </div>

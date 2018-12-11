@@ -164,10 +164,19 @@ def viewEvent(request, eventid):
           eventName_form = MyEventForm.cleaned_data['name']
           location_form = MyEventForm.cleaned_data['location']
           date_form = MyEventForm.cleaned_data['date']
+          i = 0
+          for team in teams:
+            form_name = 'team_' + str(i)
+            action = request.POST[form_name]
+            i = i+1
+            if action == "true":
+              currentEvent.teams.remove(team)
+              currentEvent.save()
           currentEvent.eventName = eventName_form
           currentEvent.location = location_form
           currentEvent.date = date_form
           currentEvent.save()
+          teams = currentEvent.teams.all()
           request.method = 'GET'
           return render(request, 'modifyEvent.html', {'date':date_form,'location':location_form,'eventName':eventName_form, 'login':'Logout', 'teams':teams})
         else:
