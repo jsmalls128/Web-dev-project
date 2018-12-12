@@ -223,7 +223,7 @@ def viewEvent(request, eventid):
     else:
       has_schedule = currentEvent.has_schedule
       in_event = False
-      if currentUser.team is in teams:
+      if currentUser.team is teams:
         in_event = True
       return render(request, 'viewEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams, 'is_full':currentEvent.is_full, 'is_leader':currentAccount.is_leader, 'eventid':eventid, 'schedule':schedule, 'in_event':in_event})
   else:
@@ -277,7 +277,15 @@ def teams(request):
   return redirect(login)
 
 def viewTeam(request, teamid):
+
+  if request.method == "POST":
+    currentAccount = User.objects.get(email = request.session['username'])
+    currentAccount.team = Team.objects.get(id = teamid)
+    currentAccount.save()
+    return redirect(profile)
+    
   if request.session.has_key('username'):
+    currentAccount = User.objects.get(email = request.session['username'])
     teamroster = []
     users = User.objects.all()
     currentTeam = Team.objects.get(id = teamid)
@@ -286,7 +294,8 @@ def viewTeam(request, teamid):
     win_num = currentTeam.win_count
     loss_num  = currentTeam.loss_count
     tie_num = currentTeam.tie_count
-    return render(request, 'viewTeam.html', {'users':users, 'currentTeam':currentTeam, 'teamName':teamName, 'win_num':win_num, 'loss_num':loss_num, 'tie_num':tie_num,'login':'Logout', 'roster':teamroster})
+    return render(request, 'viewTeam.html', {'account':currentAccount, 'users':users, 'currentTeam':currentTeam, 'teamName':teamName, 'win_num':win_num, 'loss_num':loss_num, 'tie_num':tie_num,'login':'Logout', 'roster':teamroster})
+  
   return redirect(login)
 
 def schedule(request, eventid):

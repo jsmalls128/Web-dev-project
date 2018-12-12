@@ -71,6 +71,12 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     {% else %}
     <h2>No Team Members</h2>
     {% endif %}
+    {% if account.team is None %}
+    <br>
+    <form action="" method="post"> {% csrf_token %}
+    <button class="btn btn-lg btn-success" style="color: white;background-color: red;border-color: black" type="submit"></i> Join Team !</button>
+    </form>
+    {%endif%}
   </div>
 </div>
 </center>
