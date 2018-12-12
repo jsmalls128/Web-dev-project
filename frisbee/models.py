@@ -34,6 +34,7 @@ class Event(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
   is_full = models.BooleanField(default=False)
   teams = models.ManyToManyField(Team)
+  has_schedule = models.BooleanField(default=False)
   
   def __str__(self):
     return self.eventName
@@ -43,24 +44,25 @@ class Event(models.Model):
 
 class Game(models.Model):
   location = models.CharField(max_length=100)
+  name = models.CharField(max_length=100, null=True)
   team1_score = models.IntegerField()
   team2_score = models.IntegerField()
   field_num = models.IntegerField()
   game_type = models.IntegerField(default=4)
-  team_1 = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name="team_1")
-  team_2 = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name="team_2")
+  team_1 = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name="team_1", blank=True)
+  team_2 = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name="team_2", blank=True)
   event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
   
-  def __str__(self):
-    return self.team_1 + ' vs ' + self.team_2
+  #def __str__(self):
+    #return self.team_1 + ' vs ' + self.team_2
   
-  def whoWon(self):
-    if self.team1_score > self.team2_score:
-      return self.team_1
-    elif self.team1_score < self.team2_score:
-      return self.team_2
-    else:
-      return 'Tie'
+  #def whoWon(self):
+    #if self.team1_score > self.team2_score:
+      #return self.team_1
+    #elif self.team1_score < self.team2_score:
+      #return self.team_2
+    #else:
+      #return 'Tie'
 
   class Meta:
     db_table = "GameTable"

@@ -36,6 +36,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Home</a>
     <a href="{% url 'login' %}" id="Sign-in" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">{{login}}</a>
     <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Profile</a>
+    <a href="{% url 'teams' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Teams</a>
     <a href="{% url 'onGoingEvents' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">On-going Events</a>
   </div>
 
@@ -44,57 +45,43 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-padding-large">Home</a>
     <a href="{% url 'login' %}" class="w3-bar-item w3-button w3-padding-large">{{login}}</a>
     <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-padding-large">Profile</a>
-    <a href="{% url 'onGoingEvents' %}" class="w3-bar-item w3-button w3-padding-large">On-going Events</a>
+    <a href="{% url 'onGoingEvents' %" class="w3-bar-item w3-button w3-padding-large">On-going Events</a>
   </div>
 </div>
 
 <!-- Header -->
 <header class="w3-container w3-red w3-center" style="padding:128px 16px">
-  <h1 class="w3-margin w3-jumbo">View Event</h1>
+  <h1 class="w3-margin w3-jumbo">Team Overview</h1>
 </header>
 
-<h1 class="w3-center">{{eventName}}</h1>
+
+<!-- Eventsa -->
+<center>
 <div class="w3-row-padding w3-padding-64 w3-container">
-     <div class="w3-content">
-       <h3>Where?</h3> 
-       <ul>
-	 <li>{{location}}</li>
-       </ul>
-       <h3>When?</h3> 
-       <ul>
-	 <li>{{date}}</li>
-       </ul>
-       <div>
-	 <h3>Team List</h3>
-	 {% if teams != Null %}
-	 <ul>
-	   {% for team in teams %}
-	   <li>{{team.team_name}}</li>
-	   {% endfor %}
-	 </ul>
-	 {% endif %}
-	 {% if is_full != True %}
-	 {% if is_leader == True %}
-	 <form class="form" action="{% url 'joinEvent' eventid %}" method="post" id="joinEvent"> {% csrf_token %}
-	 <button type="submit">Join Event</button>
-	 </form>
-	 {% endif %}
-	 {% endif %}
-       </div>
-     </div>
+  <div class="w3-content">
+    {% if teams %}
+    <table>
+      <tr>
+	<th>Team Name</th>
+	<th>Wins</th>
+	<th>Losses</th>
+	<th>Ties</th>
+      </tr>
+    {% for team in teams %}
+      <tr>
+	<td><a href="{% url 'viewTeam' team.id %}">{{team.team_name}}</a></td>
+	<td>{{team.win_count}}</td>
+	<td>{{team.loss_count}}</td>
+	<td>{{team.tie_count}}</td>
+      </tr>
+    {% endfor%}
+    </table>
+    {% else %}
+    <h2>No Teams Registered</h2>
+    {% endif %}
+  </div>
 </div>
-
-{% if schedule %}
-{% for game in schedule %}
-<div class="w3-container w3-center">
-  <h3>{{game.name}}</h3>
-  {% if game.team_1 != null %}
-  <p>{{game.team_1}} vs {{game.team_2}}</p>
-  {% endif %}
-</div>
-{% endfor %}
-{% endif %}
-
+</center>
 <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
     <h1 class="w3-margin w3-xlarge">Quote of the day: live life</h1>
 </div>
@@ -109,7 +96,6 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   x.className = x.className.replace(" w3-show", "");
   }
   }
-
   function checkCookie() {
   account = document.getElementById("Sign-in");
   account = account.innerHTML

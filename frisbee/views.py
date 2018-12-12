@@ -39,7 +39,7 @@ def sendConf(request,uid,token,email):
   uid = uid.decode("ASCII") 
   send_mail(
     'Registration confirmation',
-    'Please go here to confirm your account\n http://172.19.50.140/finalProject/' + uid + '/' + token,
+    'Please go here to confirm your account\n http://172.19.50.159/finalProject/' + uid + '/' + token,
     '', # Leave blank
     [email], # List of recipients
     fail_silently=False,
@@ -193,6 +193,7 @@ def viewEvent(request, eventid):
     date = currentEvent.date
     location = currentEvent.location
     teams = currentEvent.teams.all()
+    schedule = Game.objects.filter(event = currentEvent)
     if currentEvent.user == currentAccount:
       if request.method == 'POST':
         MyEventForm = EventForm(request.POST)
@@ -214,13 +215,17 @@ def viewEvent(request, eventid):
           currentEvent.save()
           teams = currentEvent.teams.all()
           request.method = 'GET'
-          return render(request, 'modifyEvent.html', {'date':date_form,'location':location_form,'eventName':eventName_form, 'login':'Logout', 'teams':teams})
+          return render(request, 'modifyEvent.html', {'date':date_form,'location':location_form,'eventName':eventName_form, 'login':'Logout', 'teams':teams, 'eventid':currentEvent.id, 'schedule':schedule, 'is_full':currentEvent.is_full})
         else:
-          return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams})
+          return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams, 'eventit':currentEvent.id, 'schedule':schedule, 'is_full':currentEvent.is_full})
       elif request.method == 'GET':
-        return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams})
+        return render(request, 'modifyEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams, 'eventid':currentEvent.id, 'schedule':schedule, 'is_full':currentEvent.is_full})
     else:
-      return render(request, 'viewEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams, 'is_full':currentEvent.is_full, 'is_leader':currentAccount.is_leader, 'eventid':eventid})
+      has_schedule = currentEvent.has_schedule
+      in_event = False
+      if currentUser.team is in teams:
+        in_event = True
+      return render(request, 'viewEvent.html', {'date':date,'location':location,'eventName':eventName, 'login':'Logout', 'teams':teams, 'is_full':currentEvent.is_full, 'is_leader':currentAccount.is_leader, 'eventid':eventid, 'schedule':schedule, 'in_event':in_event})
   else:
     redirect(login)
 
@@ -245,5 +250,77 @@ def joinEvent(request, eventid):
     else:
       currentEvent.save()
     return redirect(viewEvent, eventid)
+  else:
+    return redirect(login)
+
+def teams(request):
+  if request.session.has_key('username'):
+    teams = Team.objects.all()
+    return render(request, 'teams.html', {'teams':teams, 'login':'Logout'})
+  return redirect(login)
+
+def viewTeam(request, teamid):
+  if request.session.has_key('username'):
+    teamroster = []
+    users = User.objects.all()
+    currentTeam = Team.objects.get(id = teamid)
+    teamName = currentTeam.team_name
+    teamroster = User.objects.filter(team = currentTeam)
+    win_num = currentTeam.win_count
+    loss_num  = currentTeam.loss_count
+    tie_num = currentTeam.tie_count
+    return render(request, 'viewTeam.html', {'users':users, 'currentTeam':currentTeam, 'teamName':teamName, 'win_num':win_num, 'loss_num':loss_num, 'tie_num':tie_num,'login':'Logout', 'roster':teamroster})
+  return redirect(login)
+
+def schedule(request, eventid):
+  if request.session.has_key('username'):
+    currentAccount = User.objects.get(email = request.session['username'])
+    currentEvent = Event.objects.get(id = eventid)
+    if currentAccount == currentEvent.user:
+      # make quarters
+      currentEvent.has_schedule = True
+      currentEvent.save()
+      teams = currentEvent.teams.all()
+      quarter1 = Game(location = currentEvent.location, team1_score = 0, team2_score = 0, field_num = 1, game_type = 4, event = currentEvent, name = 'Quarter 1')
+      quarter2 = Game(location = currentEvent.location, team1_score = 0, team2_score = 0, field_num = 2, game_type = 4, event = currentEvent, name = 'Quarter 2')
+      quarter3 = Game(location = currentEvent.location, team1_score = 0, team2_score = 0, field_num = 3, game_type = 4, event = currentEvent, name = 'Quarter 3')
+      quarter4 = Game(location = currentEvent.location, team1_score = 0, team2_score = 0, field_num = 4, game_type = 4, event = currentEvent, name = 'Quarter 4')
+      count = 1
+      for team in teams:
+        if count==1 or count==2:
+          if count == 1:
+            quarter1.team_1 = team
+          else:
+            quarter1.team_2 = team
+          count = count +1
+        elif count == 3 or count == 4:
+          if count == 3:
+            quarter2.team_1 = team
+          else:
+            quarter2.team_2 = team
+          count = count +1
+        elif count == 5 or count == 6:
+          if count == 5:
+            quarter3.team_1 = team
+          else:
+            quarter3.team_2 = team
+          count = count +1
+        elif count == 7 or count == 8:
+          if count == 7:
+            quarter4.team_1 = team
+          else:
+            quarter4.team_2 = team
+          count = count +1
+      semi1 = Game(location = currentEvent.location, team1_score = 0, team2_score = 0, field_num = 1, game_type = 2, event = currentEvent, name = 'Semi 1: Winner of Quarter 1 vs Winner of Quarter 4')
+      semi2 = Game(location = currentEvent.location, team1_score = 0, team2_score = 0, field_num = 1, game_type = 2, event = currentEvent, name = 'Semi 2: Winner of Quarter 2 vs Winner of Quarter 3')
+      final = Game(location = currentEvent.location, team1_score = 0, team2_score = 0, field_num = 1, game_type = 1, event = currentEvent, name = 'Championship: Winner of Semi 1 vs Winner of Semi 2')
+      quarter1.save()
+      quarter2.save()
+      quarter3.save()
+      quarter4.save()
+      semi1.save()
+      semi2.save()
+      final.save()
+      return redirect(viewEvent, eventid)
   else:
     return redirect(login)
