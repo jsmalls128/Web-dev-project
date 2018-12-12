@@ -10,6 +10,7 @@ urlpatterns = [
     path('profile/event', views.createEvent, name='createEvent'),	
     path('event/<int:eventid>', views.viewEvent, name='viewEvent'),	
     path('on-going-events/', views.onGoingEvents, name='onGoingEvents'),	
+    path('schema/', views.schema, name='schema'),
     path('mail/', views.sendMail, name='mail'),	
     path('joinEvent/<int:eventid>', views.joinEvent, name='joinEvent'),
     path('<slug:uid>/<slug:token>', views.confirm, name='confirm'),

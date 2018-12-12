@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Frisbee Manager</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
+.w3-bar,h1,button {font-family: "Montserrat", sans-serif}
+.fa-anchor,.fa-coffee {font-size:200px}
+</style>
+<body onload="checkCookie()">
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-red w3-card w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+    <a href="{% url 'login' %}" id="Sign-in" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">{{login}}</a>
+    <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Profile</a>
+    <a href="{% url 'onGoingEvents' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">On-going Events</a>
+  </div>
+
+  <!-- Navbar on small screens -->
+  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+    <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-padding-large">Home</a>
+    <a href="{% url 'login' %}" class="w3-bar-item w3-button w3-padding-large">{{login}}</a>
+    <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-padding-large">Profile</a>
+    <a href="{% url 'onGoingEvents' %}" class="w3-bar-item w3-button w3-padding-large">On-going Events</a>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="w3-container w3-red w3-center" style="padding:128px 16px">
+  <h1 class="w3-margin w3-jumbo">Schema</h1>
+</header>
+
+<!-- First Grid -->
+<center>
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+       <div class="container">
+       <pre>EventTable
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| location         | varchar(200)         | NO   |     | NULL    |                |
+| date             | date                 | NO   |     | NULL    |                |
+| eventName        | varchar(200)         | NO   |     | NULL    |                |
+| user_id          | int(11)              | NO   |     | NULL    |                |
+| is_full          | tinyint(1)           | NO   |     | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>EventTable_teams
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| event_id         | int(11)              | NO   |     | NULL    |                |
+| team_id          | int(11)              | NO   |     | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>GameTable
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| location         | varchar(100)         | NO   |     | NULL    |                |
+| team1_score      | int(11)              | NO   |     | NULL    |                |
+| team2_score      | int(11)              | NO   |     | NULL    |                |
+| game_type        | int(11)              | NO   |     | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>TeamTable
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| team_name        | varchar(100)         | NO   |     | NULL    |                |
+| win_count        | int(11)              | NO   |     | NULL    |                |
+| loss_count       | int(11)              | NO   |     | NULL    |                |
+| tie_count        | int(11)              | NO   |     | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>UserTable
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| password         | varchar(128)         | NO   |     | NULL    |                |
+| email            | varchar(30)          | NO   |     | NULL    |                |
+| first_name       | varchar(30)          | NO   |     | NULL    |                |
+| last_name        | varchar(30)          | NO   |     | NULL    |                |
+| is_leader        | tinyint(1)           | NO   |     | NULL    |                |
+| receive_reminder | tinyint(1)           | NO   |     | NULL    |                |
+| team_id          | int(11)              | NO   |     | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>auth_group
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| name             | varchar(80)          | NO   | UNI | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>auth_group_permissions
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| group_id         | int(11)              | NO   | MUL | NULL    |                |
+| permission_id    | int(11)              | NO   | MUL | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>auth_permission
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| name             | varchar(255)         | NO   |     | NULL    |                |
+| content_type_id  | int(11)              | NO   | MUL | NULL    |                |
+| codename         | varchar(100)         | NO   |     | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>auth_user
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| password         | varchar(128)         | NO   |     | NULL    |                |
+| last_login       | datetime(6)          | YES  |     | NULL    |                |
+| is_superuser     | tinyint(1)           | NO   |     | NULL    |                |
+| username         | varchar(150)         | NO   | UNI | NULL    |                |
+| first_name       | varchar(30)          | NO   |     | NULL    |                |
+| last_name        | varchar(150)         | NO   |     | NULL    |                |
+| email            | varchar(254)         | NO   |     | NULL    |                |
+| is_staff         | tinyint(1)           | NO   |     | NULL    |                |
+| is_active        | tinyint(1)           | NO   |     | NULL    |                |
+| date_joined      | datetime(6)          | NO   |     | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>auth_user_groups
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| user_id          | int(11)              | NO   | MUL | NULL    |                |
+| group_id         | int(11)              | NO   | MUL | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>auth_user_user_permissions
++------------------+----------------------+------+-----+---------+----------------+
+|id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+|user_id          | int(11)              | NO   | MUL | NULL    |                |
+|permission_id    | int(11)              | NO   | MUL | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>django_admin_log
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| action_time      | datetime(6)          | NO   |     | NULL    |                |
+| object_id        | longtext             | YES  |     | NULL    |                |
+| object_repr      | varchar(200)         | NO   |     | NULL    |                |
+| action_flag      | smallint(5) unsigned | NO   |     | NULL    |                |
+| change_message   | longtext             | NO   |     | NULL    |                |
+| content_type_id  | int(11)              | YES  | MUL | NULL    |                |
+| user_id          | int(11)              | NO   | MUL | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>django_content_type
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| app_label        | varchar(100)         | NO   | MUL | NULL    |                |
+| model            | varchar(100)         | NO   |     | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>django_migrations
++------------------+----------------------+------+-----+---------+----------------+
+| id               | int(11)              | NO   | PRI | NULL    | auto_increment |
+| app              | varchar(255)         | NO   |     | NULL    |                |
+| name             | varchar(255)         | NO   |     | NULL    |                |
+| applied          | datetime(6)          | NO   |     | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+
+<pre>django_session
++------------------+----------------------+------+-----+---------+----------------+
+| session_key      | varchar(40)          | NO   | PRI | NULL    |                |
+| session_data     | longtext             | NO   |     | NULL    |                |
+| expire_date      | datetime(6)          | NO   | MUL | NULL    |                |
++------------------+----------------------+------+-----+---------+----------------+
+</pre>
+       </div>
+    </div>
+  </div>
+</div>
+</center>
+<div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
+    <h1 class="w3-margin w3-xlarge">Quote of the day: live life</h1>
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-64 w3-center w3-opacity">  
+  <div class="w3-xlarge w3-padding-32">
+    <i class="fa fa-facebook-official w3-hover-opacity"></i>
+    <i class="fa fa-instagram w3-hover-opacity"></i>
+    <i class="fa fa-snapchat w3-hover-opacity"></i>
+    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+    <i class="fa fa-twitter w3-hover-opacity"></i>
+    <i class="fa fa-linkedin w3-hover-opacity"></i>
+ </div>
+ <p><a href="{% url 'schema' %}">schema</a></p>
+</footer>
+
+<script>
+// Used to toggle the menu on small screens when clicking on the menu button
+function myFunction() {
+    var x = document.getElementById("navDemo");
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else { 
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
+
+function checkCookie() {
+    account = document.getElementById("Sign-in");
+    account = account.innerHTML
+    console.log(account)
+    var compare = 'Logout';
+    if(account === compare){
+      var signInEle = document.getElementById("Sign-in");
+      signInEle.href="./logout";
+      }
+}
+</script>
+
+</body>
+</html>

@@ -247,3 +247,6 @@ def joinEvent(request, eventid):
     return redirect(viewEvent, eventid)
   else:
     return redirect(login)
+
+def schema(request):
+  return render(request, 'schema.html', {'login':'Logout'})
