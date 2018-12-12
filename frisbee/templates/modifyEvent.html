@@ -36,6 +36,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     <a href="{% url 'home' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Home</a>
     <a href="{% url 'login' %}" id="Sign-in" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">{{login}}</a>
     <a href="{% url 'profile' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Profile</a>
+    <a href="{% url 'teams' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Teams</a>
     <a href="{% url 'onGoingEvents' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">On-going Events</a>
   </div>
 
@@ -112,6 +113,25 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
         </div>
       </div>
     </form>
+    {% if schedule %}
+    {% for game in schedule %}
+    <div class="w3-container">
+      <h3>{{game.name}}</h3>
+      {% if game.team_1 != null %}
+      <p>{{game.team_1}} vs {{game.team_2}}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% if is_full == True %}
+    <form class="form" action="{% url 'schedule' eventid %}" method="post" id="schedule"> {% csrf_token %}
+      <div class="form-group">
+	<div class="col-xs-6">
+	  <button type="submit">Make Schedule</button>
+	</div>
+      </div>
+    </form>
+    {% endif %}
   </div>
 </div>
 <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">

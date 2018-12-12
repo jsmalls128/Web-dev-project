@@ -13,6 +13,9 @@ urlpatterns = [
     path('on-going-events/', views.onGoingEvents, name='onGoingEvents'),	
     path('mail/', views.sendMail, name='mail'),	
     path('joinEvent/<int:eventid>', views.joinEvent, name='joinEvent'),
+    path('teams/', views.teams, name='teams'),
+    path('teams/<int:teamid>', views.viewTeam, name='viewTeam'),
+    path('schedule/<int:eventid>', views.schedule, name='schedule'),
     path('<slug:uid>/<slug:token>', views.confirm, name='confirm'),
     
 ]
