@@ -247,3 +247,19 @@ def joinEvent(request, eventid):
     return redirect(viewEvent, eventid)
   else:
     return redirect(login)
+
+def removeplayer(request):
+  if request.session.has_key('username'):
+    currentAccount = User.objects.get(email = request.session['username'])
+    if(currentAccount.is_leader):
+      memberList = request.POST
+      currentTeam = currentAccount.team
+      itermembers = iter(memberList)
+      next(itermembers)
+      for member in itermembers:
+        removeEmail = memberList[member]
+        deleteMember = User.objects.get(email = removeEmail, team = currentTeam)
+        deleteMember.team = None
+        deleteMember.save()
+      return redirect(profile)
+  return redirect(login)

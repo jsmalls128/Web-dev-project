@@ -60,18 +60,11 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   		<div class="col-sm-3"><!--left col-->
               
 
-      <div class="text-center">
-        <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar">
-        <h6>Upload a different photo...</h6>
-        <input type="file" class="text-center center-block file-upload">
-      </div></hr><br>
-
-               
+      </hr><br>
           <div class="panel panel-default">
-            <div class="panel-heading">Website <i class="fa fa-link fa-1x"></i></div>
-            <div class="panel-body"><a href="http://bootnipets.com">bootnipets.com</a></div>
+            <div class="panel-heading">Join request </div>
+            <div class="panel-body"><a href="http://bootnipets.com">Join request</a></div>
           </div>
-          
           
           <ul class="list-group">
             <li class="list-group-item text-muted">Team: {{team.team_name}}
@@ -169,7 +162,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
                <h2></h2>
                
                <hr>
-                  <form class="form" action="./team" method="post" id="registrationForm"> {% csrf_token %}
+                  <form class="form" action="./team" method="post" id="teamForm"> {% csrf_token %}
                       <div class="form-group" id="team-name-input">
                           
                           <div class="col-xs-6">
@@ -178,19 +171,21 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
                           </div>
                       </div>
                       {% for member in roster %}
+                      {%if member.is_leader is False%}
+                      
                       <div class="form-group">
                           
                           <div class="col-xs-6">
                               <label for="first_name"><h4>{{member.first_name}} {{member.last_name}}</h4></label>
-                              <button  class="form-control" id="delete_button" > Delete</button>
+                              <input type="checkbox" id="" name="{{member.email}}" value="{{member.email}}">
                           </div>
                       </div>
+                      {%endif%}
                       {% endfor %}
                       <div class="form-group">
                            <div class="col-xs-12">
                                 <br>
-                              	<button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Submit</button>
-                               	<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
+                              	<button class="btn btn-lg btn-success" style="color: white;background-color: red;border-color: black" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Remove Player</button>
                             </div>
                       </div>
               	</form>
@@ -270,6 +265,8 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
   console.log(account)
   var compare = 'Manage Team';
   if(account === compare){
+  teamForm = document.getElementById("teamForm");
+  teamForm.action = './remove';
   var div = document.getElementById("team-name-input");
   div.parentNode.removeChild(div);
   }
